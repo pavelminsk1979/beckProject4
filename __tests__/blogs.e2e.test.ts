@@ -15,7 +15,7 @@ describe('/blogs',()=>{
     it('get content blogs',async ()=>{
         const res = await req
             .get('/blogs')
-            .expect(STATUS_CODE.CODE_200)
+            .expect(STATUS_CODE.SUCCESS_200)
 
         expect(res.body).toEqual([])
 
@@ -29,7 +29,7 @@ describe('/blogs',()=>{
             .post('/blogs')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
             .send({ name: '', description: '',websiteUrl:'' })
-            .expect(STATUS_CODE.CODE_400)
+            .expect(STATUS_CODE.BAD_REQUEST_400)
 
         expect(res.body).toEqual({  errorsMessages: [
                 { message: 'Incorrect name', field: 'name' },
@@ -51,7 +51,7 @@ describe('/blogs',()=>{
             .send({ name: 'name',
                 description: 'description',
                 websiteUrl:'https://www.outue.com/'})
-            .expect(STATUS_CODE.CODE_201)
+            .expect(STATUS_CODE.CREATED_201)
 
         idNewBlog=res.body.id
 
@@ -63,7 +63,7 @@ describe('/blogs',()=>{
     it('Get blog bu incorrect id',async ()=>{
         const res =await req
             .get('/blogs/65d3bad29d85d6c63bd81a86')
-        .expect(STATUS_CODE.CODE_404)
+        .expect(STATUS_CODE.NOT_FOUND_404)
 
     })
 
@@ -71,7 +71,7 @@ describe('/blogs',()=>{
     it('get content blogs',async ()=>{
         const res = await req
             .get('/blogs')
-            .expect(STATUS_CODE.CODE_200)
+            .expect(STATUS_CODE.SUCCESS_200)
         console.log(res.body)
 
     })
@@ -79,7 +79,7 @@ describe('/blogs',()=>{
     it('Get blog bu correct id',async ()=>{
         const res =await req
             .get('/blogs/'+idNewBlog)
-             .expect(STATUS_CODE.CODE_200)
+             .expect(STATUS_CODE.SUCCESS_200)
         console.log(idNewBlog)
          expect(res.body.name).toEqual('name')
          expect(res.body.description).toEqual('description')
@@ -97,7 +97,7 @@ describe('/blogs',()=>{
             .send({ name: 'updateName',
                 description: 'updateDescription',
                 websiteUrl:'https://www.outue.updateCom/'})
-            .expect(STATUS_CODE.CODE_404)
+            .expect(STATUS_CODE.NOT_FOUND_404)
 
         const getRes =await req
             .get('/blogs/')
@@ -116,7 +116,7 @@ describe('/blogs',()=>{
             .send({ name: 'updateName',
                 description: 'updateDescription',
                 websiteUrl:'https://www.outue.updateCom/'})
-            .expect(STATUS_CODE.CODE_204)
+            .expect(STATUS_CODE.NO_CONTENT_204)
 
         const getRes =await req
             .get('/blogs/')
@@ -136,7 +136,7 @@ describe('/blogs',()=>{
             .send({ name: 'updateNameupdateNameupdateNameupdateName',
                 description: '',
                 websiteUrl:'htt-updateCom'})
-            .expect(STATUS_CODE.CODE_400)
+            .expect(STATUS_CODE.BAD_REQUEST_400)
         expect(res.body).toEqual({  errorsMessages: [
                 { message: 'Incorrect name', field: 'name' },
                 { message: 'Incorrect description', field: 'description' },
@@ -157,7 +157,7 @@ describe('/blogs',()=>{
         await req
             .delete('/blogs/65d3bad29d85d6c63bd81a86')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
-            .expect(STATUS_CODE.CODE_404)
+            .expect(STATUS_CODE.NOT_FOUND_404)
 
         const getRes =  await req
             .get('/blogs')
@@ -173,7 +173,7 @@ describe('/blogs',()=>{
         await req
             .delete('/blogs/'+idNewBlog)
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
-            .expect(STATUS_CODE.CODE_204)
+            .expect(STATUS_CODE.NO_CONTENT_204)
 
         const getRes =  await req
             .get('/blogs')

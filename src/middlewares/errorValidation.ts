@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import { validationResult} from "express-validator";
+import {STATUS_CODE} from "../constant-status-code";
 
 
 type ErrorsMessage = {
@@ -14,7 +15,7 @@ type ErrorType = { errors: ErrorsMessage[] }
 export const errorValidation = (req: Request, res: Response, next: NextFunction) => {
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
-        res.status(400).json({errors: errors.array()})
+        res.status(STATUS_CODE.BAD_REQUEST_400).json({errors: errors.array()})
     } else {
         next()
     }

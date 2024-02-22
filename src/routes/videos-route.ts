@@ -10,8 +10,8 @@ import {minAgeRestrictionValidation} from "../middlewares/minAgeRestrictionValid
 import {canBeDownloadedValidation} from "../middlewares/canBeDownloadedValidation";
 import {publicationDateValidation} from "../middlewares/publicationDateValidation";
 import {availableResolutionsValidation} from "../middlewares/availableResolutionsValidation";
-import {RequestWithParams} from "../types/RequestWithParams";
-import {RequestWithBody} from "../types/RequestWithBody";
+import {RequestWithParams} from "../allTypes/RequestWithParams";
+import {RequestWithBody} from "../allTypes/RequestWithBody";
 import {STATUS_CODE} from "../constant-status-code";
 
 
@@ -22,16 +22,16 @@ export const videosRoute = Router({})
 
 videosRoute.get('/', (req: Request, res: Response) => {
     const videos = videosRepository.getVideos()
-    res.status(STATUS_CODE.CODE_200).send(videos)
+    res.status(STATUS_CODE.SUCCESS_200).send(videos)
 })
 
 
 videosRoute.get('/:id', (req: RequestWithParams<IdNumberGetAndDeleteModel>, res: Response) => {
     let video = videosRepository.findVideoById(+req.params.id)
     if (video) {
-        res.status(STATUS_CODE.CODE_200).send(video)
+        res.status(STATUS_CODE.SUCCESS_200).send(video)
     } else {
-        res.sendStatus(STATUS_CODE.CODE_404)
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }
 })
 
@@ -39,7 +39,7 @@ videosRoute.get('/:id', (req: RequestWithParams<IdNumberGetAndDeleteModel>, res:
 videosRoute.post('/', titleValidation, authorValidation, errorValidation,
     (req: RequestWithBody<CreateVideo>, res: Response) => {
         let newVideo = videosRepository.createVideo(req.body)
-        res.status(STATUS_CODE.CODE_201).send(newVideo)
+        res.status(STATUS_CODE.CREATED_201).send(newVideo)
     })
 
 
@@ -52,9 +52,9 @@ videosRoute.put('/:id', titleValidation, authorValidation,
     (req: Request, res: Response) => {
         let isUpdateVideo = videosRepository.updateVideo(+req.params.id, req.body)
         if (isUpdateVideo) {
-            res.sendStatus(STATUS_CODE.CODE_204)
+            res.sendStatus(STATUS_CODE.NO_CONTENT_204)
         } else {
-            res.sendStatus(STATUS_CODE.CODE_404)
+            res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         }
     })
 
@@ -62,9 +62,9 @@ videosRoute.put('/:id', titleValidation, authorValidation,
 videosRoute.delete('/:id', (req: RequestWithParams<IdNumberGetAndDeleteModel>, res: Response) => {
     let video = videosRepository.deletVideoById(+req.params.id)
     if (video) {
-        res.sendStatus(STATUS_CODE.CODE_204)
+        res.sendStatus(STATUS_CODE.NO_CONTENT_204)
     } else {
-        res.sendStatus(STATUS_CODE.CODE_404)
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }
 })
 

@@ -1,11 +1,12 @@
 import {NextFunction,Response,Request} from "express";
+import {STATUS_CODE} from "../../constant-status-code";
 
 
 
 export const authMiddleware = (req:Request,res:Response,next:NextFunction)=>{
     if(req.headers['authorization']==='Basic YWRtaW46cXdlcnR5'){
         next()
-    } else {res.sendStatus(401)}
+    } else {res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)}
 }
 
 

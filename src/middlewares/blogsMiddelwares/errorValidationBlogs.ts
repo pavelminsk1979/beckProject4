@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult, ValidationError} from "express-validator";
+import {STATUS_CODE} from "../../constant-status-code";
 
 
 export const errorValidationBlogs = (req: Request, res: Response, next: NextFunction) => {
@@ -11,6 +12,6 @@ export const errorValidationBlogs = (req: Request, res: Response, next: NextFunc
     if (formatedErrors.isEmpty()) {
         next()
     } else {
-        res.status(400).json({errorsMessages: formatedErrors.array({onlyFirstError:true})})
+        res.status(STATUS_CODE.BAD_REQUEST_400).json({errorsMessages: formatedErrors.array({onlyFirstError:true})})
     }
 }

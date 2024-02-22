@@ -21,7 +21,7 @@ describe('/posts',()=>{
             .send({ name: 'nameBlog',
                 description: 'descriptionBlog',
                 websiteUrl:'https://www.outue.Blog/'})
-            .expect(STATUS_CODE.CODE_201)
+            .expect(STATUS_CODE.CREATED_201)
         idNewBlog=createRes.body.id
         console.log(idNewBlog)
     })
@@ -29,7 +29,7 @@ describe('/posts',()=>{
     it('get content posts',async ()=>{
         const res = await req
             .get('/posts')
-            .expect(STATUS_CODE.CODE_200)
+            .expect(STATUS_CODE.SUCCESS_200)
 
         expect(res.body).toEqual([])
 
@@ -45,7 +45,7 @@ describe('/posts',()=>{
                 shortDescription:'length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY3aPKo3XKwbfrmeWOJyQgGnlX5sP3aW3RlaRSQxJyQgGnlX5sP3aW3RlaRSQx',
                 content:'222content',
                 blogId:'65d3bad29d85d6c63bd01a86'})
-            .expect(STATUS_CODE.CODE_400)
+            .expect(STATUS_CODE.BAD_REQUEST_400)
 
         expect(res.body).toEqual({  errorsMessages: [
                 { message: 'Incorrect title', field: 'title' },
@@ -70,7 +70,7 @@ describe('/posts',()=>{
                 shortDescription: 'shortDescription',
                 content:'content',
                 blogId:idNewBlog})
-            .expect(STATUS_CODE.CODE_201)
+            .expect(STATUS_CODE.CREATED_201)
 
         idNewPost=res.body.id
 
@@ -84,7 +84,7 @@ describe('/posts',()=>{
     it('Get post bu incorrect id',async ()=>{
         const res =await req
             .get('/posts/65d3bad29d85d6c63bd01a86')
-        .expect(STATUS_CODE.CODE_404)
+        .expect(STATUS_CODE.NOT_FOUND_404)
 
     })
 
@@ -92,13 +92,13 @@ describe('/posts',()=>{
     it('get content posts',async ()=>{
         const res = await req
             .get('/posts')
-            .expect(STATUS_CODE.CODE_200)
+            .expect(STATUS_CODE.SUCCESS_200)
     })
 
     it('Get post bu correct id',async ()=>{
         const res =await req
             .get('/posts/'+idNewPost)
-             .expect(STATUS_CODE.CODE_200)
+             .expect(STATUS_CODE.SUCCESS_200)
 
         expect(res.body.title).toEqual('title')
         expect(res.body.shortDescription).toEqual('shortDescription')
@@ -116,7 +116,7 @@ describe('/posts',()=>{
                 shortDescription: 'updateShortDescription',
                 content:'updateContent',
                 blogId:idNewBlog})
-            .expect(STATUS_CODE.CODE_404)
+            .expect(STATUS_CODE.NOT_FOUND_404)
 
         const getRes =await req
             .get('/posts/')
@@ -138,7 +138,7 @@ describe('/posts',()=>{
                 shortDescription: 'updateShortDescription',
                 content:'updateContent',
                 blogId:idNewBlog})
-            .expect(STATUS_CODE.CODE_204)
+            .expect(STATUS_CODE.NO_CONTENT_204)
 
         const getRes =await req
             .get('/posts/')
@@ -160,7 +160,7 @@ describe('/posts',()=>{
                 shortDescription:'length_101-DnZlTI1khUHpqOqCzftIYiSHCV8fKjYFQOoCIwmUczzW9V5K8cqY3aPKo3XKwbfrmeWOJyQgGnlX5sP3aW3RlaRSQx',
                 content:'222content',
                 blogId:'65d3bad29d85d6c63bd01a86'})
-            .expect(STATUS_CODE.CODE_400)
+            .expect(STATUS_CODE.BAD_REQUEST_400)
         expect(res.body).toEqual({  errorsMessages: [
                 { message: 'Incorrect title', field: 'title' },
                 { message: 'Incorrect shortDescription', field: 'shortDescription' },
@@ -183,7 +183,7 @@ describe('/posts',()=>{
         await req
             .delete('/posts/65d3bad29d85d6c63bd01a86')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
-            .expect(STATUS_CODE.CODE_404)
+            .expect(STATUS_CODE.NOT_FOUND_404)
 
         const getRes =  await req
             .get('/posts')
@@ -201,7 +201,7 @@ describe('/posts',()=>{
         await req
             .delete('/posts/'+idNewPost)
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
-            .expect(STATUS_CODE.CODE_204)
+            .expect(STATUS_CODE.NO_CONTENT_204)
 
         const getRes =  await req
             .get('/posts')

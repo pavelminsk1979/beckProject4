@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import { validationResult} from "express-validator";
-import {STATUS_CODE} from "../constant-status-code";
+import {STATUS_CODE} from "../../constant-status-code";
 
 
 type ErrorsMessage = {

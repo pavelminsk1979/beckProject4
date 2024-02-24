@@ -1,6 +1,7 @@
 import {CreateVideo} from "../models/CreateVideoModel";
 import {UpdateVideoModel} from "../models/UpdateVideoModel";
-import {DB, Video} from "../db/db";
+import {DB} from "../db/db";
+import {Video} from "../allTypes/videoTypes";
 
 
 export const videosRepository = {

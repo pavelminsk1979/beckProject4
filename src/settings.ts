@@ -4,6 +4,7 @@ import {blogsRoute} from "./routes/blogs-route";
 import {postsRoute} from "./routes/posts-route";
 import {DB} from "./db/db";
 import {blogsCollection, postsCollection} from "./db/mongoDb";
+import {STATUS_CODE} from "./constant-status-code";
 
 
 export const app = express()
@@ -18,9 +19,7 @@ app.use('/posts', postsRoute)
 
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
     DB.videos.length = 0
-   //DB.blogs.length=0
-    //DB.posts.length=0
    await postsCollection.deleteMany({})
    await blogsCollection.deleteMany({})
-    res.sendStatus(204)
+    res.sendStatus(STATUS_CODE.NO_CONTENT_204)
 })

@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {AvailableResolutions} from "../db/db";
+import {AvailableResolutions} from "../../db/db";
 
 
 

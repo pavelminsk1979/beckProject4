@@ -22,35 +22,6 @@ export const DB = {
         "publicationDate": "2024-02-01T18:57:08.689Z",
         "availableResolutions": [AvailableResolutions.P144]
     }],
-    blogs:[
-        {
-            id: '123',
-            name: 'blogName',
-            description: 'blogDescription',
-            websiteUrl: 'blogWebsiteUrl'
-        }
-    ],
-    posts:[
-        {
-            id: '77777',
-            title: 'firstPosTtitle',
-            shortDescription: 'firstPostShortDescription',
-            content: 'firstPostContent',
-            blogId: 'firstPostBlogId',
-            blogName: 'firstPostBlogName',
-        }
-    ]
-}
-
-export type Video = {
-    id: number;
-    title: string;
-    author: string;
-    canBeDownloaded: boolean ;
-    minAgeRestriction: number ;
-    createdAt: string;
-    publicationDate: string;
-    availableResolutions: AvailableResolutions[];
 }
 
 

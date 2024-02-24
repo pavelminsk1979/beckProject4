@@ -13,6 +13,8 @@ import {blogIdValidationPosts} from "../middlewares/postsMiddlewares/blogIdValid
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
 import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {Post} from "../allTypes/postTypes";
+import {postsSevrice} from "../domain/posts-service";
+import {postQueryRepository} from "../repositories/post-query-repository";
 
 
 
@@ -23,14 +25,15 @@ export const postsRoute = Router ({})
 const createAndUpdateValidationPosts = ()=>[titleValidationPosts,shortDescriptionValidationPosts,contentValidationPosts,blogIdValidationPosts]
 
 postsRoute.get('/', async (req: Request, res: Response) => {
-    const posts:Post[] = await postsRepository.getPosts()
+
+    const posts:Post[] = await postQueryRepository.getPosts()
 
     res.status(STATUS_CODE.SUCCESS_200).send(posts)
 })
 
 
 postsRoute.get('/:id', async (req: RequestWithParams<IdStringGetAndDeleteModel>, res: Response) => {
-    const post = await postsRepository.findPostById(req.params.id)
+    const post = await postQueryRepository.findPostById(req.params.id)
     if(post){
         res.status(STATUS_CODE.SUCCESS_200).send(post)
     } else { res.sendStatus(STATUS_CODE.NOT_FOUND_404)}
@@ -40,7 +43,7 @@ postsRoute.get('/:id', async (req: RequestWithParams<IdStringGetAndDeleteModel>,
 postsRoute.post('/',authMiddleware,
     createAndUpdateValidationPosts(),
     errorValidationBlogs, async (req: RequestWithBody<CreateAndUpdatePostModel>, res: Response) => {
-const newPost = await postsRepository.createPost(req.body)
+const newPost = await postsSevrice.createPost(req.body)
     res.status(STATUS_CODE.CREATED_201).send(newPost)
 })
 
@@ -49,7 +52,7 @@ const newPost = await postsRepository.createPost(req.body)
 postsRoute.put('/:id',authMiddleware,
     createAndUpdateValidationPosts(),
     errorValidationBlogs, async (req: RequestWithParamsWithBody<IdStringGetAndDeleteModel, CreateAndUpdatePostModel>, res: Response) => {
-    const isUpdatePost = await postsRepository.updatePost(req.params.id,req.body)
+    const isUpdatePost = await postsSevrice.updatePost(req.params.id,req.body)
         if(isUpdatePost){
             res.sendStatus(STATUS_CODE.NO_CONTENT_204)
         }else {res.sendStatus(STATUS_CODE.NOT_FOUND_404)}
@@ -57,7 +60,7 @@ postsRoute.put('/:id',authMiddleware,
 
 
 postsRoute.delete('/:id',authMiddleware, async (req: RequestWithParams<IdStringGetAndDeleteModel>, res: Response) => {
-    const isPostDelete = await postsRepository.deletePostById(req.params.id)
+    const isPostDelete = await postsSevrice.deletePostById(req.params.id)
     if(isPostDelete){
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)
     }else {

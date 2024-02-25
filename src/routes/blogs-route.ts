@@ -1,5 +1,4 @@
-import {Request, Response, Router} from "express";
-import {blogsRepository} from "../repositories/blogs-repository-mongoDB";
+import { Response, Router} from "express";
 import {authMiddleware} from "../middlewares/authMiddleware/authMiddleware";
 import {nameValidationBlogs} from "../middlewares/blogsMiddelwares/nameValidationBlogs";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
@@ -13,6 +12,8 @@ import {STATUS_CODE} from "../constant-status-code";
 import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {blogsSevrice} from "../domain/blogs-service";
 import {blogQueryRepository} from "../repositories/blog-query-repository";
+import {RequestWithQuery} from "../allTypes/RequestWithQuery";
+import {QueryBlogInputModal} from "../allTypes/blogTypes";
 
 
 export const blogsRoute = Router({})
@@ -20,8 +21,15 @@ export const blogsRoute = Router({})
 const postValidationBlogs = () => [nameValidationBlogs, descriptionValidationBlogs, websiteUrlValidationBlog]
 
 
-blogsRoute.get('/', async (req: Request, res: Response) => {
-    const blogs = await blogQueryRepository.getBlogs()
+blogsRoute.get('/', async (req: RequestWithQuery<QueryBlogInputModal>, res: Response) => {
+    const sortData = {
+        searchNameTerm: req.query.searchNameTerm ?? null,
+        sortBy: req.query.sortBy ?? 'createdAt',
+        sortDirection: req.query.sortDirection ?? 'desc',
+        pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+    }
+    const blogs = await blogQueryRepository.getBlogs(sortData)
     res.status(STATUS_CODE.SUCCESS_200).send(blogs)
 })
 
@@ -39,7 +47,8 @@ blogsRoute.get('/:id', async (req: RequestWithParams<IdStringGetAndDeleteModel>,
 
 blogsRoute.post('/', authMiddleware, postValidationBlogs(), errorValidationBlogs, async (req: RequestWithBody<CreateAndUpdateBlogModel>, res: Response) => {
     const newBlog = await blogsSevrice.createBlog(req.body)
-    if(newBlog){    res.status(STATUS_CODE.CREATED_201).send(newBlog)
+    if (newBlog) {
+        res.status(STATUS_CODE.CREATED_201).send(newBlog)
     } else {
         res.sendStatus(STATUS_CODE.NOT_FOUND_404)
     }

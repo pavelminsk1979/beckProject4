@@ -1,3 +1,4 @@
+import {SortDirection} from "mongodb";
 
 export type Blog = {
     name: string,
@@ -14,4 +15,28 @@ export type OutputBlog = {
     websiteUrl: string,
     createdAt:string,
     isMembership:boolean
+}
+
+export type PaginationWithOutputBlog<I> = {
+    pagesCount:number,
+    page:number,
+    pageSize:number,
+    totalCount:number,
+    items:I[]
+}
+
+export type QueryBlogInputModal = {
+    searchNameTerm?:string
+    sortBy?:string
+    sortDirection?:SortDirection
+    pageNumber?:number
+    pageSize?:number
+}
+
+export type SortData = {
+    searchNameTerm:string | null
+    sortBy:string
+    sortDirection:SortDirection
+    pageNumber:number
+    pageSize:number
 }

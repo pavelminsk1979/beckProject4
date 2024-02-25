@@ -1,6 +1,12 @@
 import {CreateAndUpdateBlogModel} from "../models/CreateAndUpdateBlogModel";
-import {Blog} from "../allTypes/blogTypes";
+import {Blog, CreatePostFromCorrectBlogInputModel} from "../allTypes/blogTypes";
 import {blogsRepository} from "../repositories/blogs-repository-mongoDB";
+import {ParamBlogId} from "../allTypes/ParamBlogIdInputModel";
+import {blogQueryRepository} from "../repositories/blog-query-repository";
+import {STATUS_CODE} from "../constant-status-code";
+import {CreatePostInputModel, Post} from "../allTypes/postTypes";
+import {postsRepository} from "../repositories/posts-repository-mongoDB";
+import {postQueryRepository} from "../repositories/post-query-repository";
 
 
 export const blogsSevrice = {
@@ -30,6 +36,40 @@ export const blogsSevrice = {
         } else {
             return null
         }
+    },
+
+    async createPostFromBlog(createPostModel: CreatePostInputModel, blogId: string) {
+
+        const {title, shortDescription, content} = createPostModel
+
+        const blog = await blogQueryRepository.findBlogById(blogId)
+
+        if (!blog) {
+            return null
+        }
+
+        const newPost: Post = {
+            title,
+            shortDescription,
+            content,
+            blogId,
+            blogName: blog.name,
+            createdAt: new Date().toISOString()
+        }
+
+        const createdPost = await postsRepository.createPost(newPost)
+
+        if (!createdPost) {
+            return null
+        }
+
+        const post = await postQueryRepository.findPostById(createdPost.insertedId.toString())
+
+        if (!post) {
+            return null
+        }
+        return post
+
     },
 
 

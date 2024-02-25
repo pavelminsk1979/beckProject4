@@ -7,7 +7,7 @@ import {OutputBlog, PaginationWithOutputBlog, SortData} from "../allTypes/blogTy
 
 
 export const blogQueryRepository = {
-    async getBlogs(sortData:SortData) {
+    async getBlogs(sortData:SortData):Promise<PaginationWithOutputBlog<OutputBlog>> {
         const {searchNameTerm,sortBy,sortDirection,pageNumber,pageSize}=sortData
 
         let filter = {}

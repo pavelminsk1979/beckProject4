@@ -13,12 +13,20 @@ import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {blogsSevrice} from "../domain/blogs-service";
 import {blogQueryRepository} from "../repositories/blog-query-repository";
 import {RequestWithQuery} from "../allTypes/RequestWithQuery";
-import {QueryBlogInputModal} from "../allTypes/blogTypes";
+import {CreatePostFromCorrectBlogInputModel, QueryBlogInputModal} from "../allTypes/blogTypes";
+import {titleValidationPosts} from "../middlewares/postsMiddlewares/titleValidationPosts";
+import {shortDescriptionValidationPosts} from "../middlewares/postsMiddlewares/shortDescriptionValidationPosts";
+import {contentValidationPosts} from "../middlewares/postsMiddlewares/contentValidationPosts";
+import {ParamBlogId} from "../allTypes/ParamBlogIdInputModel";
+import {ObjectId} from "mongodb";
+
 
 
 export const blogsRoute = Router({})
 
 const postValidationBlogs = () => [nameValidationBlogs, descriptionValidationBlogs, websiteUrlValidationBlog]
+
+const validatorCreatePostForCorrectBlog = ()=>[titleValidationPosts,shortDescriptionValidationPosts,contentValidationPosts]
 
 
 blogsRoute.get('/', async (req: RequestWithQuery<QueryBlogInputModal>, res: Response) => {
@@ -55,8 +63,32 @@ blogsRoute.post('/', authMiddleware, postValidationBlogs(), errorValidationBlogs
 })
 
 
+
+blogsRoute.post('/:blogId/posts', authMiddleware, validatorCreatePostForCorrectBlog(), errorValidationBlogs, async (req: RequestWithParamsWithBody<ParamBlogId,CreatePostFromCorrectBlogInputModel>, res: Response) => {
+
+    const blogId = req.params.blogId
+
+    if(!ObjectId.isValid(blogId)){
+        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        return
+    }
+
+    const post = await blogsSevrice.createPostFromBlog(req.body,blogId)
+
+    if(!post){
+        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        return
+    }
+
+    res.status(STATUS_CODE.CREATED_201).send(post)
+
+})
+
+
 blogsRoute.put('/:id', authMiddleware, postValidationBlogs(), errorValidationBlogs, async (req: RequestWithParamsWithBody<IdStringGetAndDeleteModel, CreateAndUpdateBlogModel>, res: Response) => {
+
     const isUpdateBlog = await blogsSevrice.updateBlog(req.params.id, req.body)
+
     if (isUpdateBlog) {
         res.sendStatus(STATUS_CODE.NO_CONTENT_204)
     } else {

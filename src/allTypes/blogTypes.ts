@@ -40,3 +40,9 @@ export type SortData = {
     pageNumber:number
     pageSize:number
 }
+
+export type CreatePostFromCorrectBlogInputModel={
+    title:string
+    shortDescription:string
+    content:string
+}

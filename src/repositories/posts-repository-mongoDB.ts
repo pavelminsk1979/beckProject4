@@ -1,6 +1,5 @@
 import {CreateAndUpdatePostModel} from "../models/CreateAndUpdatePostModel";
-import {blogsCollection, postsCollection} from "../db/mongoDb";
-import {postMaper} from "../mapers/postMaper";
+import { postsCollection} from "../db/mongoDb";
 import {Post} from "../allTypes/postTypes";
 import {ObjectId} from "mongodb";
 

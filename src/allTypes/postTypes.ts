@@ -17,3 +17,9 @@ export type OutputPost = {
     blogName: string
     createdAt:string
 }
+
+export type CreatePostInputModel = {
+    title: string
+    shortDescription: string
+    content: string
+}

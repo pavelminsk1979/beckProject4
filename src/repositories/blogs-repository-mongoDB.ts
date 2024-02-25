@@ -1,46 +1,15 @@
 import {CreateAndUpdateBlogModel} from "../models/CreateAndUpdateBlogModel";
-import {blogsCollection} from "../db/mongoDb";
-import {blogMaper} from "../mapers/blogMaper";
+import {blogsCollection, postsCollection} from "../db/mongoDb";
 import {ObjectId} from "mongodb";
 import {Blog} from "../allTypes/blogTypes";
 
 
 export const blogsRepository = {
-    async getBlogs() {
-        const blogs = await blogsCollection.find({}).toArray()
-        return blogs.map(blogMaper)
-    },
 
-
-    async findBlogById(id: string) {
-        const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
-        if (blog) {
-            return blogMaper(blog)
-        } else {
-            return null
-        }
-    },
-
-
-    async createBlog(requestBodyBlog: CreateAndUpdateBlogModel) {
-        const {name, description, websiteUrl} = requestBodyBlog
-
-        const newBlog:Blog = {
-            name,
-            description,
-            websiteUrl,
-            isMembership: false,
-            createdAt: new Date().toISOString()
-        }
+    async createBlog(newBlog: Blog) {
 
         const result = await blogsCollection.insertOne(newBlog)
-        if (result.insertedId.toString()) {
-            return {  name:newBlog.name,
-                description:newBlog.description,
-                websiteUrl:newBlog.websiteUrl,
-                isMembership:newBlog.isMembership,
-                createdAt: newBlog.createdAt, id: result.insertedId.toString()}
-        }else {return null}
+        return result
     },
 
 

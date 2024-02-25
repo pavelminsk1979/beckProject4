@@ -1,10 +1,8 @@
-
-
 import {body} from "express-validator";
-import {blogsRepository} from "../../repositories/blogs-repository-mongoDB";
+import {blogQueryRepository} from "../../repositories/blog-query-repository";
 
 const findValue=async (value:string)=>{
-   let blog = await blogsRepository.findBlogById(value)
+   let blog = await blogQueryRepository.findBlogById(value)
     if(blog){return blog.id}
     return null
 }

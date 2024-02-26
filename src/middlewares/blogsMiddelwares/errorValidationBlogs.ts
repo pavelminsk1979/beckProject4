@@ -12,6 +12,6 @@ export const errorValidationBlogs = (req: Request, res: Response, next: NextFunc
     if (formatedErrors.isEmpty()) {
         next()
     } else {
-        res.status(STATUS_CODE.UNAUTHORIZED_401).json({errorsMessages: formatedErrors.array({onlyFirstError:true})})
+        res.status(STATUS_CODE.BAD_REQUEST_400).json({errorsMessages: formatedErrors.array({onlyFirstError:true})})
     }
 }

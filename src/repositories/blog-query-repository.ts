@@ -1,7 +1,8 @@
-import {blogsCollection} from "../db/mongoDb";
+import {blogsCollection, postsCollection} from "../db/mongoDb";
 import {blogMaper} from "../mapers/blogMaper";
 import {ObjectId} from "mongodb";
 import {OutputBlog, PaginationWithOutputBlog, SortData} from "../allTypes/blogTypes";
+import {postMaper} from "../mapers/postMaper";
 
 
 
@@ -40,6 +41,66 @@ export const blogQueryRepository = {
             items:blogs.map(blogMaper)
         }
     },
+
+
+
+    async getPostsForCorrectBlog(sortDataGetPostsForBlogs:any,blogId:string) {
+
+        const {sortBy,sortDirection,pageNumber,pageSize}=sortDataGetPostsForBlogs
+
+
+        const blog = await blogQueryRepository.findBlogById(blogId)
+        console.log(blog)
+
+        if (!blog) {
+            return null
+        }
+
+        const posts = await postsCollection
+            .find({ blogId: blogId })
+            .sort(sortBy, sortDirection)
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
+
+        const totalCount = await postsCollection.countDocuments({})
+
+        const pagesCount = Math.ceil(totalCount / pageSize)
+
+
+        return {
+            pagesCount,
+            page: pageNumber,
+            pageSize,
+            totalCount,
+            items: posts.map(postMaper)
+        }
+
+
+
+
+  /*      const blogs = await blogsCollection
+            .find(filter)
+            .sort(sortBy,sortDirection)
+            .skip((pageNumber-1)*pageSize)
+            .limit(pageSize)
+            .toArray()
+
+        const totalCount = await blogsCollection.countDocuments(filter)
+
+        const pagesCount=Math.ceil(totalCount/pageSize)
+
+
+        return{
+            pagesCount,
+            page:pageNumber,
+            pageSize,
+            totalCount,
+            items:blogs.map(blogMaper)
+        }*/
+    },
+
+
 
 
     async findBlogById(id: string) {

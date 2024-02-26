@@ -33,6 +33,13 @@ export type QueryBlogInputModal = {
     pageSize?:number
 }
 
+export type GetQueryBlogInputModal = {
+    sortBy?:string
+    sortDirection?:SortDirection
+    pageNumber?:number
+    pageSize?:number
+}
+
 export type SortData = {
     searchNameTerm:string | null
     sortBy:string

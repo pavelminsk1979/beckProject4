@@ -13,12 +13,13 @@ import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
 import {blogsSevrice} from "../domain/blogs-service";
 import {blogQueryRepository} from "../repositories/blog-query-repository";
 import {RequestWithQuery} from "../allTypes/RequestWithQuery";
-import {CreatePostFromCorrectBlogInputModel, QueryBlogInputModal} from "../allTypes/blogTypes";
+import {CreatePostFromCorrectBlogInputModel, GetQueryBlogInputModal, QueryBlogInputModal} from "../allTypes/blogTypes";
 import {titleValidationPosts} from "../middlewares/postsMiddlewares/titleValidationPosts";
 import {shortDescriptionValidationPosts} from "../middlewares/postsMiddlewares/shortDescriptionValidationPosts";
 import {contentValidationPosts} from "../middlewares/postsMiddlewares/contentValidationPosts";
 import {ParamBlogId} from "../allTypes/ParamBlogIdInputModel";
 import {ObjectId} from "mongodb";
+import {RequestWithParamsWithQuery} from "../allTypes/RequestWithParamsWithQuery";
 
 
 
@@ -51,6 +52,39 @@ blogsRoute.get('/:id', async (req: RequestWithParams<IdStringGetAndDeleteModel>,
     }
 
 })
+
+
+blogsRoute.get('/:blogId/posts', async (req: RequestWithParamsWithQuery<ParamBlogId,GetQueryBlogInputModal>, res: Response) => {
+
+    const blogId = req.params.blogId
+
+    if(!ObjectId.isValid(blogId)){
+        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        return
+    }
+
+    const sortDataGetPostsForBlogs = {
+        sortBy: req.query.sortBy ?? 'createdAt',
+        sortDirection: req.query.sortDirection ?? 'desc',
+        pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+    }
+
+    const posts = await blogQueryRepository.getPostsForCorrectBlog(sortDataGetPostsForBlogs,blogId)
+
+
+
+
+
+    if(!posts){
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
+        return
+    }
+
+    res.status(STATUS_CODE.CREATED_201).send(posts)
+
+})
+
 
 
 blogsRoute.post('/', authMiddleware, postValidationBlogs(), errorValidationBlogs, async (req: RequestWithBody<CreateAndUpdateBlogModel>, res: Response) => {

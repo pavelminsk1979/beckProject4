@@ -50,7 +50,6 @@ export const blogQueryRepository = {
 
 
         const blog = await blogQueryRepository.findBlogById(blogId)
-        console.log(blog)
 
         if (!blog) {
             return null

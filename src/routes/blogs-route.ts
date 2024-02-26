@@ -110,7 +110,7 @@ blogsRoute.post('/:blogId/posts', authMiddleware, validatorCreatePostForCorrectB
     const post = await blogsSevrice.createPostFromBlog(req.body,blogId)
 
     if(!post){
-        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         return
     }
 

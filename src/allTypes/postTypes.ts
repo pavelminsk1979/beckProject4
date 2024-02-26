@@ -1,3 +1,4 @@
+import {SortDirection} from "mongodb";
 
 export type Post = {
     title: string
@@ -23,3 +24,26 @@ export type CreatePostInputModel = {
     shortDescription: string
     content: string
 }
+
+export type QueryBlogInputModal={
+    sortBy?:string
+    sortDirection?:SortDirection
+    pageNumber?:number
+    pageSize?:number
+}
+
+export type SortDataPost = {
+    sortBy:string
+    sortDirection:SortDirection
+    pageNumber:number
+    pageSize:number
+}
+
+export type PaginationWithOutputPosts<I> = {
+    pagesCount:number,
+    page:number,
+    pageSize:number,
+    totalCount:number,
+    items:I[]
+}
+

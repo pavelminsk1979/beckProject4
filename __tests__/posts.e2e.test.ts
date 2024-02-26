@@ -31,7 +31,7 @@ describe('/posts',()=>{
             .get('/posts')
             .expect(STATUS_CODE.SUCCESS_200)
 
-        expect(res.body).toEqual([])
+        expect(res.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })
 
     })
 
@@ -55,7 +55,7 @@ describe('/posts',()=>{
 
 
         const getRes = await req.get('/posts/')
-        expect(getRes.body).toEqual([])
+        expect(getRes.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })
     })
 
 
@@ -120,12 +120,12 @@ describe('/posts',()=>{
 
         const getRes =await req
             .get('/posts/')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].title).toEqual('title')
-        expect(getRes.body[0].shortDescription)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].title).toEqual('title')
+        expect(getRes.body.items[0].shortDescription)
             .toEqual('shortDescription')
-        expect(getRes.body[0].content).toEqual('content')
-        expect(getRes.body[0].blogId).toEqual(idNewBlog)
+        expect(getRes.body.items[0].content).toEqual('content')
+        expect(getRes.body.items[0].blogId).toEqual(idNewBlog)
     })
 
 
@@ -142,12 +142,12 @@ describe('/posts',()=>{
 
         const getRes =await req
             .get('/posts/')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].title).toEqual('updateTitle')
-        expect(getRes.body[0].shortDescription)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].title).toEqual('updateTitle')
+        expect(getRes.body.items[0].shortDescription)
             .toEqual('updateShortDescription')
-        expect(getRes.body[0].content).toEqual('updateContent')
-        expect(getRes.body[0].blogId).toEqual(idNewBlog)
+        expect(getRes.body.items[0].content).toEqual('updateContent')
+        expect(getRes.body.items[0].blogId).toEqual(idNewBlog)
     })
 
 
@@ -169,12 +169,12 @@ describe('/posts',()=>{
 
         const getRes =await req
             .get('/posts/')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].title).toEqual('updateTitle')
-        expect(getRes.body[0].shortDescription)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].title).toEqual('updateTitle')
+        expect(getRes.body.items[0].shortDescription)
             .toEqual('updateShortDescription')
-        expect(getRes.body[0].content).toEqual('updateContent')
-        expect(getRes.body[0].blogId).toEqual(idNewBlog)
+        expect(getRes.body.items[0].content).toEqual('updateContent')
+        expect(getRes.body.items[0].blogId).toEqual(idNewBlog)
     })
 
 
@@ -187,12 +187,12 @@ describe('/posts',()=>{
 
         const getRes =  await req
             .get('/posts')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].title).toEqual('updateTitle')
-        expect(getRes.body[0].shortDescription)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].title).toEqual('updateTitle')
+        expect(getRes.body.items[0].shortDescription)
             .toEqual('updateShortDescription')
-        expect(getRes.body[0].content).toEqual('updateContent')
-        expect(getRes.body[0].blogId).toEqual(idNewBlog)
+        expect(getRes.body.items[0].content).toEqual('updateContent')
+        expect(getRes.body.items[0].blogId).toEqual(idNewBlog)
 
     })
 
@@ -205,7 +205,7 @@ describe('/posts',()=>{
 
         const getRes =  await req
             .get('/posts')
-        expect(getRes.body.length).toBe(0)
+        expect(getRes.body.items.length).toBe(0)
     })
 
 

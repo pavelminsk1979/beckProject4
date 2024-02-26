@@ -1,6 +1,5 @@
-import {Request, Response, Router} from "express";
+import { Response, Router} from "express";
 import {STATUS_CODE} from "../constant-status-code";
-import {postsRepository} from "../repositories/posts-repository-mongoDB";
 import {RequestWithParams} from "../allTypes/RequestWithParams";
 import {IdStringGetAndDeleteModel} from "../models/IdStringGetAndDeleteModel";
 import {RequestWithBody} from "../allTypes/RequestWithBody";
@@ -12,9 +11,10 @@ import {contentValidationPosts} from "../middlewares/postsMiddlewares/contentVal
 import {blogIdValidationPosts} from "../middlewares/postsMiddlewares/blogIdValidationPosts";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
 import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
-import {Post} from "../allTypes/postTypes";
+import {Post, QueryBlogInputModal} from "../allTypes/postTypes";
 import {postsSevrice} from "../domain/posts-service";
 import {postQueryRepository} from "../repositories/post-query-repository";
+import {RequestWithQuery} from "../allTypes/RequestWithQuery";
 
 
 
@@ -24,9 +24,16 @@ export const postsRoute = Router ({})
 
 const createAndUpdateValidationPosts = ()=>[titleValidationPosts,shortDescriptionValidationPosts,contentValidationPosts,blogIdValidationPosts]
 
-postsRoute.get('/', async (req: Request, res: Response) => {
+postsRoute.get('/', async (req: RequestWithQuery<QueryBlogInputModal>, res: Response) => {
 
-    const posts:Post[] = await postQueryRepository.getPosts()
+    const sortDataPost = {
+        pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+        sortBy: req.query.sortBy ?? 'createdAt',
+        sortDirection: req.query.sortDirection ?? 'desc',
+    }
+
+    const posts = await postQueryRepository.getPosts(sortDataPost)
 
     res.status(STATUS_CODE.SUCCESS_200).send(posts)
 })

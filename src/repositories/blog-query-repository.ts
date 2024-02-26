@@ -14,7 +14,7 @@ export const blogQueryRepository = {
 
         if(searchNameTerm){
             filter = {name:{
-                $regex:sortData.searchNameTerm,
+                $regex:searchNameTerm,
                     $options:'i'
             }}
         }

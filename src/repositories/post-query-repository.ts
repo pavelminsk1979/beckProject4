@@ -1,4 +1,4 @@
-import {Post} from "../allTypes/postTypes";
+import {OutputPost, PaginationWithOutputPosts, Post, SortDataPost} from "../allTypes/postTypes";
 import {postsCollection} from "../db/mongoDb";
 import {postMaper} from "../mapers/postMaper";
 import {ObjectId} from "mongodb";
@@ -6,9 +6,30 @@ import {ObjectId} from "mongodb";
 
 export const postQueryRepository = {
 
-    async getPosts(): Promise<Post[]> {
-        const posts = await postsCollection.find({}).toArray()
-        return posts.map(postMaper)
+    async getPosts(sortDataPost: SortDataPost): Promise<PaginationWithOutputPosts<OutputPost>> {
+
+        const {sortBy, sortDirection, pageNumber, pageSize} = sortDataPost
+
+        const posts = await postsCollection
+            .find({})
+            .sort(sortBy, sortDirection)
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
+
+        const totalCount = await postsCollection.countDocuments({})
+
+        const pagesCount = Math.ceil(totalCount / pageSize)
+
+
+        return {
+            pagesCount,
+            page: pageNumber,
+            pageSize,
+            totalCount,
+            items: posts.map(postMaper)
+        }
+
     },
 
 

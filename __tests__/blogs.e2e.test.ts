@@ -16,8 +16,8 @@ describe('/blogs',()=>{
         const res = await req
             .get('/blogs')
             .expect(STATUS_CODE.SUCCESS_200)
-
-        expect(res.body).toEqual([])
+        //console.log(res.body)
+        expect(res.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })
 
     })
 
@@ -39,7 +39,7 @@ describe('/blogs',()=>{
 
 
         const getRes = await req.get('/blogs/')
-        expect(getRes.body).toEqual([])
+        expect(getRes.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })
     })
 
     let idNewBlog:string
@@ -72,7 +72,7 @@ describe('/blogs',()=>{
         const res = await req
             .get('/blogs')
             .expect(STATUS_CODE.SUCCESS_200)
-        console.log(res.body)
+       // console.log(res.body)
 
     })
 
@@ -80,7 +80,8 @@ describe('/blogs',()=>{
         const res =await req
             .get('/blogs/'+idNewBlog)
              .expect(STATUS_CODE.SUCCESS_200)
-        console.log(idNewBlog)
+        //console.log(idNewBlog)
+        //console.log(res.body)
          expect(res.body.name).toEqual('name')
          expect(res.body.description).toEqual('description')
          expect(res.body.websiteUrl).toEqual('https://www.outue.com/')
@@ -101,10 +102,11 @@ describe('/blogs',()=>{
 
         const getRes =await req
             .get('/blogs/')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].name).toEqual('name')
-        expect(getRes.body[0].description).toEqual('description')
-        expect(getRes.body[0].id).toEqual(idNewBlog)
+       //console.log(getRes.body)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].name).toEqual('name')
+        expect(getRes.body.items[0].description).toEqual('description')
+        expect(getRes.body.items[0].id).toEqual(idNewBlog)
     })
 
 
@@ -120,10 +122,10 @@ describe('/blogs',()=>{
 
         const getRes =await req
             .get('/blogs/')
-        expect(getRes.body.length).toBe(1)
-        expect(getRes.body[0].name).toEqual('updateName')
-        expect(getRes.body[0].description).toEqual('updateDescription')
-        expect(getRes.body[0].websiteUrl)
+        expect(getRes.body.items.length).toBe(1)
+        expect(getRes.body.items[0].name).toEqual('updateName')
+        expect(getRes.body.items[0].description).toEqual('updateDescription')
+        expect(getRes.body.items[0].websiteUrl)
             .toEqual('https://www.outue.updateCom/')
     })
 
@@ -145,9 +147,9 @@ describe('/blogs',()=>{
 
         const getRes =await req
             .get('/blogs/')
-        expect(getRes.body[0].name).toEqual('updateName')
-        expect(getRes.body[0].description).toEqual('updateDescription')
-        expect(getRes.body[0].websiteUrl)
+        expect(getRes.body.items[0].name).toEqual('updateName')
+        expect(getRes.body.items[0].description).toEqual('updateDescription')
+        expect(getRes.body.items[0].websiteUrl)
             .toEqual('https://www.outue.updateCom/')
     })
 
@@ -161,9 +163,9 @@ describe('/blogs',()=>{
 
         const getRes =  await req
             .get('/blogs')
-        expect(getRes.body[0].name).toEqual('updateName')
-        expect(getRes.body[0].description).toEqual('updateDescription')
-        expect(getRes.body[0].websiteUrl)
+        expect(getRes.body.items[0].name).toEqual('updateName')
+        expect(getRes.body.items[0].description).toEqual('updateDescription')
+        expect(getRes.body.items[0].websiteUrl)
             .toEqual('https://www.outue.updateCom/')
 
     })
@@ -177,9 +179,8 @@ describe('/blogs',()=>{
 
         const getRes =  await req
             .get('/blogs')
-        expect(getRes.body.length).toBe(0)
+        expect(getRes.body.items.length).toBe(0)
     })
-
 
 
 })

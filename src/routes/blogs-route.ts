@@ -59,7 +59,7 @@ blogsRoute.get('/:blogId/posts', async (req: RequestWithParamsWithQuery<ParamBlo
     const blogId = req.params.blogId
 
     if(!ObjectId.isValid(blogId)){
-        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         return
     }
 
@@ -81,7 +81,7 @@ blogsRoute.get('/:blogId/posts', async (req: RequestWithParamsWithQuery<ParamBlo
         return
     }
 
-    res.status(STATUS_CODE.CREATED_201).send(posts)
+    res.status(STATUS_CODE.SUCCESS_200).send(posts)
 
 })
 
@@ -103,7 +103,7 @@ blogsRoute.post('/:blogId/posts', authMiddleware, validatorCreatePostForCorrectB
     const blogId = req.params.blogId
 
     if(!ObjectId.isValid(blogId)){
-        res.sendStatus(STATUS_CODE.BAD_REQUEST_400)
+        res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
         return
     }
 

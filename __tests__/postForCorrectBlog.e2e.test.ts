@@ -19,7 +19,7 @@ describe('/blogs',()=>{
 
     const loginPasswordBasic64='YWRtaW46cXdlcnR5'
 
-    it('+POST create newBlog',async ()=>{
+    it('POST create newBlog',async ()=>{
         const res =await req
             .post('/blogs')
             .set('Authorization', `Basic ${loginPasswordBasic64}`)
@@ -35,7 +35,7 @@ describe('/blogs',()=>{
         expect(res.body.websiteUrl).toEqual('https://www.outue.com/')
     })
 
-    it('+Get posts for correct  blog',async ()=>{
+    it('Get posts for correct  blog',async ()=>{
         const res = await req
             .get(`/blogs/${idNewBlog}/posts`)
             .expect(STATUS_CODE.SUCCESS_200)
@@ -49,6 +49,33 @@ describe('/blogs',()=>{
         const res = await req
             .get(`/blogs/${incorrectBlogId}/posts`)
             .expect(STATUS_CODE.NOT_FOUND_404)
+
+    })
+
+
+    it(' POST   create  newPost  for exits Blog)', async ()=> {
+        const res =await req
+            .post(`/blogs/${idNewBlog}/posts`)
+            .set('Authorization', `Basic ${loginPasswordBasic64}`)
+            .send({ title: 'title',
+                shortDescription: 'shortDescription',
+                content:'content' })
+            .expect(STATUS_CODE.CREATED_201)
+
+const createdPost = res.body
+        //console.log(createdPost)
+        expect(createdPost.title).toEqual('title')
+
+    })
+
+
+    it('Get posts for correct  blog',async ()=>{
+        const res = await req
+            .get(`/blogs/${idNewBlog}/posts`)
+            .expect(STATUS_CODE.SUCCESS_200)
+
+        console.log(res.body)
+     /*   expect(res.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })*/
 
     })
 

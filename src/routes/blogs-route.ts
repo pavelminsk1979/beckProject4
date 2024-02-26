@@ -103,7 +103,7 @@ blogsRoute.post('/:blogId/posts', authMiddleware, validatorCreatePostForCorrectB
     const blogId = req.params.blogId
 
     if(!ObjectId.isValid(blogId)){
-        res.sendStatus(STATUS_CODE.UNAUTHORIZED_401)
+        res.sendStatus(STATUS_CODE.NOT_FOUND_404)
         return
     }
 

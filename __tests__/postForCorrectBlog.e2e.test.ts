@@ -74,7 +74,7 @@ const createdPost = res.body
             .get(`/blogs/${idNewBlog}/posts`)
             .expect(STATUS_CODE.SUCCESS_200)
 
-        console.log()
+        //console.log()
      /*   expect(res.body).toEqual({ pagesCount: 0, page: 1, pageSize: 10, totalCount: 0, items: [] })*/
 
     })

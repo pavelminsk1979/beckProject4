@@ -5,48 +5,47 @@ import {OutputBlog, PaginationWithOutputBlog, SortData} from "../allTypes/blogTy
 import {postMaper} from "../mapers/postMaper";
 
 
-
-
 export const blogQueryRepository = {
-    async getBlogs(sortData:SortData):Promise<PaginationWithOutputBlog<OutputBlog>> {
-        const {searchNameTerm,sortBy,sortDirection,pageNumber,pageSize}=sortData
+    async getBlogs(sortData: SortData): Promise<PaginationWithOutputBlog<OutputBlog>> {
+        const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = sortData
 
         let filter = {}
 
-        if(searchNameTerm){
-            filter = {name:{
-                $regex:searchNameTerm,
-                    $options:'i'
-            }}
+        if (searchNameTerm) {
+            filter = {
+                name: {
+                    $regex: searchNameTerm,
+                    $options: 'i'
+                }
+            }
         }
 
 
         const blogs = await blogsCollection
             .find(filter)
-            .sort(sortBy,sortDirection)
-            .skip((pageNumber-1)*pageSize)
+            .sort(sortBy, sortDirection)
+            .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
 
         const totalCount = await blogsCollection.countDocuments(filter)
 
-        const pagesCount=Math.ceil(totalCount/pageSize)
+        const pagesCount = Math.ceil(totalCount / pageSize)
 
 
-        return{
+        return {
             pagesCount,
-            page:pageNumber,
+            page: pageNumber,
             pageSize,
             totalCount,
-            items:blogs.map(blogMaper)
+            items: blogs.map(blogMaper)
         }
     },
 
 
+    async getPostsForCorrectBlog(sortDataGetPostsForBlogs: any, blogId: string) {
 
-    async getPostsForCorrectBlog(sortDataGetPostsForBlogs:any,blogId:string) {
-
-        const {sortBy,sortDirection,pageNumber,pageSize}=sortDataGetPostsForBlogs
+        const {sortBy, sortDirection, pageNumber, pageSize} = sortDataGetPostsForBlogs
 
 
         const blog = await blogQueryRepository.findBlogById(blogId)
@@ -55,14 +54,16 @@ export const blogQueryRepository = {
             return null
         }
 
+        const filter = {blogId}
+
         const posts = await postsCollection
-            .find({ blogId: blogId })
+            .find(filter)
             .sort(sortBy, sortDirection)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await postsCollection.countDocuments({})
+        const totalCount = await postsCollection.countDocuments(filter)
 
         const pagesCount = Math.ceil(totalCount / pageSize)
 
@@ -76,30 +77,26 @@ export const blogQueryRepository = {
         }
 
 
+        /*      const blogs = await blogsCollection
+                  .find(filter)
+                  .sort(sortBy,sortDirection)
+                  .skip((pageNumber-1)*pageSize)
+                  .limit(pageSize)
+                  .toArray()
+
+              const totalCount = await blogsCollection.countDocuments(filter)
+
+              const pagesCount=Math.ceil(totalCount/pageSize)
 
 
-  /*      const blogs = await blogsCollection
-            .find(filter)
-            .sort(sortBy,sortDirection)
-            .skip((pageNumber-1)*pageSize)
-            .limit(pageSize)
-            .toArray()
-
-        const totalCount = await blogsCollection.countDocuments(filter)
-
-        const pagesCount=Math.ceil(totalCount/pageSize)
-
-
-        return{
-            pagesCount,
-            page:pageNumber,
-            pageSize,
-            totalCount,
-            items:blogs.map(blogMaper)
-        }*/
+              return{
+                  pagesCount,
+                  page:pageNumber,
+                  pageSize,
+                  totalCount,
+                  items:blogs.map(blogMaper)
+              }*/
     },
-
-
 
 
     async findBlogById(id: string) {

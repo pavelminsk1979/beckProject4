@@ -11,7 +11,7 @@ import {contentValidationPosts} from "../middlewares/postsMiddlewares/contentVal
 import {blogIdValidationPosts} from "../middlewares/postsMiddlewares/blogIdValidationPosts";
 import {errorValidationBlogs} from "../middlewares/blogsMiddelwares/errorValidationBlogs";
 import {RequestWithParamsWithBody} from "../allTypes/RequestWithParamsWithBody";
-import {Post, QueryBlogInputModal} from "../allTypes/postTypes";
+import { QueryBlogInputModal} from "../allTypes/postTypes";
 import {postsSevrice} from "../domain/posts-service";
 import {postQueryRepository} from "../repositories/post-query-repository";
 import {RequestWithQuery} from "../allTypes/RequestWithQuery";
